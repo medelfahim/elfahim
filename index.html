@@ -1,14 +1,739 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>elfahim-portfolio</title>
-    <script type="module" crossorigin src="./assets/index-b5rsHbJ_.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-Ba_r_kiX.css">
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mohamed EL FAHIM - Portfolio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    body { font-family:'Inter',sans-serif; background:#050505; color:#e5e7eb; }
+    h1,h2,h3,h4 { font-family:'Montserrat',sans-serif; }
+
+    /* Fond aurora vert foncé original */
+    .aurora-bg {
+      background:
+        radial-gradient(circle at 50% 0%, rgba(20,83,45,0.65) 0%, rgba(0,0,0,0) 65%),
+        radial-gradient(circle at 80% 20%, rgba(6,78,59,0.4) 0%, rgba(0,0,0,0) 50%),
+        #050505;
+    }
+
+    /* ── EFFET LUMIÈRE SOURIS ── */
+    #mouse-glow {
+      pointer-events: none;
+      position: fixed;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, rgba(34,197,94,0.08) 0%, rgba(34,197,94,0.03) 40%, transparent 70%);
+      transition: opacity 0.4s ease;
+      opacity: 0;
+      z-index: 0;
+    }
+
+    /* ── HALO PHOTO ── */
+    #photo-halo {
+      position: absolute;
+      inset: -20px;
+      border-radius: 2.5rem;
+      background: radial-gradient(circle, rgba(34,197,94,0.35) 0%, rgba(34,197,94,0.15) 40%, transparent 70%);
+      filter: blur(18px);
+      opacity: 0;
+      transition: opacity 0.6s ease;
+      z-index: 0;
+    }
+
+    /* Halo permanent doux (comme l'original) */
+    #photo-halo-static {
+      position: absolute;
+      inset: -4px;
+      border-radius: 2.2rem;
+      background: linear-gradient(135deg, rgba(34,197,94,0.5), rgba(16,185,129,0.3));
+      filter: blur(12px);
+      opacity: 0.28;
+      z-index: 0;
+      animation: pulse-static 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse-static {
+      0%,100% { opacity: 0.25; }
+      50%      { opacity: 0.42; }
+    }
+
+    /* ── SECTION TRANSITIONS ── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── CARDS ── */
+    .card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 1rem;
+      transition: all 0.3s ease;
+    }
+    .card:hover {
+      border-color: rgba(34,197,94,0.35);
+      background: rgba(34,197,94,0.04);
+      transform: translateY(-2px);
+    }
+
+    /* ── SKILL TAGS ── */
+    .skill-tag {
+      background: rgba(34,197,94,0.08);
+      border: 1px solid rgba(34,197,94,0.18);
+      color: rgba(255,255,255,0.75);
+      border-radius: 0.5rem;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      display: inline-block;
+    }
+    .skill-tag:hover {
+      background: rgba(34,197,94,0.2);
+      color: #4ade80;
+      border-color: rgba(34,197,94,0.45);
+    }
+
+    /* ── TIMELINE ── */
+    .timeline-line {
+      position: absolute;
+      left: 0;
+      top: 12px;
+      bottom: 12px;
+      width: 1px;
+      background: linear-gradient(to bottom, rgba(34,197,94,0.5), rgba(34,197,94,0.1), transparent);
+    }
+    .timeline-dot {
+      position: absolute;
+      left: -5px;
+      top: 28px;
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: #22c55e;
+      border: 2px solid #050505;
+      box-shadow: 0 0 10px rgba(34,197,94,0.6);
+    }
+
+    /* ── LANG BAR ── */
+    .lang-bar-fill {
+      height: 100%;
+      border-radius: 100px;
+      background: linear-gradient(to right, #16a34a, #22c55e);
+      width: 0%;
+      transition: width 1.2s cubic-bezier(.4,0,.2,1);
+    }
+
+    /* ── BTN CONTACT ── */
+    .btn-white {
+      background: white; color: #000; font-weight: 800;
+      border-radius: 1rem; padding: 12px 32px;
+      transition: all 0.25s ease;
+      box-shadow: 0 0 20px rgba(255,255,255,0.12);
+      text-decoration: none; display: inline-block;
+    }
+    .btn-white:hover { background: #e5e7eb; transform: translateY(-2px); }
+
+    .btn-outline {
+      border: 1.5px solid rgba(255,255,255,0.25); color: white; font-weight: 700;
+      border-radius: 1rem; padding: 12px 32px;
+      transition: all 0.25s ease;
+      text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-outline:hover { border-color: #22c55e; color: #22c55e; transform: translateY(-2px); }
+
+    /* ── SOCIAL ICON ── */
+    .social-icon {
+      width: 48px; height: 48px; border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,0.65);
+      text-decoration: none;
+      transition: all 0.25s ease;
+    }
+    .social-icon:hover {
+      border-color: #22c55e; color: #22c55e;
+      background: rgba(34,197,94,0.1);
+      transform: scale(1.1);
+    }
+
+    /* ── CONTACT CARD ── */
+    .contact-card {
+      display: flex; align-items: center; gap: 16px;
+      padding: 18px 24px; border-radius: 14px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      text-decoration: none; color: rgba(255,255,255,0.75);
+      transition: all 0.25s ease;
+    }
+    .contact-card:hover {
+      border-color: rgba(34,197,94,0.4);
+      background: rgba(34,197,94,0.05);
+      transform: translateY(-2px);
+      color: white;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #050505; }
+    ::-webkit-scrollbar-thumb { background: rgba(34,197,94,0.3); border-radius: 3px; }
+
+    @media(max-width:768px) {
+      .desk-only { display:none!important; }
+      .grid-2 { grid-template-columns:1fr!important; }
+      .grid-3 { grid-template-columns:1fr!important; }
+      .grid-lang { grid-template-columns:1fr 1fr!important; }
+    }
+    @media(min-width:769px) {
+      .mob-only { display:none!important; }
+    }
+
+    @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(7px)} }
+  </style>
+</head>
+<body>
+
+<!-- Lumière souris globale -->
+<div id="mouse-glow"></div>
+
+<!-- ═══════════════════════════════════════
+     NAVBAR
+═══════════════════════════════════════ -->
+<nav id="navbar" style="position:fixed;top:0;left:0;right:0;z-index:100;padding:24px 0;transition:all 0.3s ease;">
+  <div style="max-width:1100px;margin:0 auto;padding:0 28px;display:flex;align-items:center;justify-content:space-between;">
+    <span style="font-weight:800;font-size:18px;color:white;font-family:Montserrat,sans-serif;letter-spacing:-0.3px;">
+      EL FAHIM Mohamed
+    </span>
+    <ul class="desk-only" style="display:flex;gap:36px;list-style:none;margin:0;padding:0;">
+      <li><a href="#hero"        class="nav-link">À PROPOS</a></li>
+      <li><a href="#formation"   class="nav-link">FORMATION</a></li>
+      <li><a href="#experience"  class="nav-link">EXPÉRIENCE</a></li>
+      <li><a href="#projets"     class="nav-link">PROJETS</a></li>
+      <li><a href="#competences" class="nav-link">COMPÉTENCES</a></li>
+    </ul>
+    <a href="mailto:medelfahim2003@gmail.com" class="desk-only"
+      style="padding:9px 20px;border-radius:100px;border:1.5px solid rgba(255,255,255,0.2);color:white;font-size:13px;font-weight:700;text-decoration:none;letter-spacing:0.04em;transition:all 0.25s ease;"
+      onmouseover="this.style.background='white';this.style.color='#000';"
+      onmouseout="this.style.background='transparent';this.style.color='white';">
+      CONTACT
+    </a>
+    <button class="mob-only" id="mob-menu-btn"
+      style="background:none;border:none;cursor:pointer;color:white;padding:4px;">
+      <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </div>
+  <div id="mob-menu" style="display:none;background:rgba(5,5,5,0.97);border-top:1px solid rgba(34,197,94,0.15);padding:20px 28px;flex-direction:column;gap:20px;">
+    <a href="#hero"        style="color:rgba(255,255,255,0.8);text-decoration:none;font-size:15px;font-weight:600;">À Propos</a>
+    <a href="#formation"   style="color:rgba(255,255,255,0.8);text-decoration:none;font-size:15px;font-weight:600;">Formation</a>
+    <a href="#experience"  style="color:rgba(255,255,255,0.8);text-decoration:none;font-size:15px;font-weight:600;">Expérience</a>
+    <a href="#projets"     style="color:rgba(255,255,255,0.8);text-decoration:none;font-size:15px;font-weight:600;">Projets</a>
+    <a href="#competences" style="color:rgba(255,255,255,0.8);text-decoration:none;font-size:15px;font-weight:600;">Compétences</a>
+  </div>
+</nav>
+
+<style>
+  .nav-link {
+    text-decoration:none;font-size:13px;font-weight:600;
+    color:rgba(255,255,255,0.7);letter-spacing:0.06em;
+    transition:color 0.2s;
+  }
+  .nav-link:hover { color:#4ade80; }
+</style>
+
+<!-- ═══════════════════════════════════════
+     HERO
+═══════════════════════════════════════ -->
+<section id="hero" class="aurora-bg" style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:100px 28px 60px;position:relative;overflow:hidden;">
+
+  <!-- Grille de points subtile -->
+  <div style="position:absolute;inset:0;opacity:0.035;pointer-events:none;background-image:radial-gradient(circle,#22c55e 1px,transparent 1px);background-size:38px 38px;"></div>
+
+  <div style="position:relative;z-index:1;max-width:800px;">
+
+    <!-- Photo avec effet halo -->
+    <div id="photo-wrapper" style="position:relative;display:inline-block;margin-bottom:36px;cursor:default;">
+      <div id="photo-halo-static"></div>
+      <div id="photo-halo"></div>
+      <div style="position:relative;z-index:1;width:192px;height:192px;border-radius:2rem;overflow:hidden;border:1.5px solid rgba(255,255,255,0.18);box-shadow:0 0 25px rgba(0,255,150,0.2);">
+        <img src="profile.png" alt="Mohamed EL FAHIM" style="width:100%;height:100%;object-fit:cover;transform:scale(1.08) translateY(4px);"/>
+      </div>
+    </div>
+
+    <!-- Nom -->
+    <h1 style="font-size:clamp(42px,7vw,72px);font-weight:800;color:white;letter-spacing:-1.5px;line-height:1;margin:0 0 18px;">
+      Mohamed EL FAHIM
+    </h1>
+
+    <!-- Titre vert -->
+    <h2 style="font-size:clamp(13px,2vw,17px);font-weight:600;color:#4ade80;letter-spacing:0.15em;text-transform:uppercase;margin:0 0 10px;">
+      Élève Ingénieur en Génie Électrique
+    </h2>
+
+    <p style="font-size:15px;color:rgba(255,255,255,0.45);margin:0 0 40px;">
+      Management des Systèmes Électriques Intelligents
+    </p>
+
+    <!-- Icônes sociales -->
+    <div style="display:flex;gap:16px;justify-content:center;margin-bottom:32px;">
+      <a href="https://www.linkedin.com/in/mohamed-el-fahim-044850249/" target="_blank" rel="noreferrer" class="social-icon" aria-label="LinkedIn">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+      </a>
+      <a href="mailto:medelfahim2003@gmail.com" class="social-icon" aria-label="Email">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+      </a>
+      <a href="tel:+212622624977" class="social-icon" aria-label="Téléphone">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.16 6.16l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      </a>
+    </div>
+
+    <!-- CTA -->
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+      <a href="#contact" class="btn-white">Me Contacter</a>
+      <a href="cv.pdf" download class="btn-outline">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Télécharger CV
+      </a>
+    </div>
+  </div>
+
+  <!-- Flèche bas -->
+  <div style="position:absolute;bottom:36px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,0.25);animation:bounce 2s infinite;font-size:12px;letter-spacing:0.1em;display:flex;flex-direction:column;align-items:center;gap:6px;">
+    <span>DÉFILER</span>
+    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     FORMATION
+═══════════════════════════════════════ -->
+<section id="formation" style="padding:100px 28px;background:#0a0a0a;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="fade-up section-header" style="margin-bottom:52px;">
+      <div style="display:flex;align-items:center;gap:16px;">
+        <div style="width:36px;height:3px;background:#22c55e;border-radius:2px;"></div>
+        <h2 style="font-size:30px;font-weight:800;color:white;margin:0;letter-spacing:-0.5px;">Formation</h2>
+        <div style="flex:1;height:1px;background:linear-gradient(to right,rgba(34,197,94,0.35),transparent);"></div>
+      </div>
+    </div>
+    <div class="grid-2 fade-up" style="display:grid;grid-template-columns:1fr 1fr;gap:40px;">
+      <!-- Résumé -->
+      <div style="background:rgba(34,197,94,0.04);border:1px solid rgba(34,197,94,0.12);border-radius:18px;padding:34px;">
+        <p style="font-size:11px;font-weight:700;color:#22c55e;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:18px;">Résumé professionnel</p>
+        <p style="font-size:15px;line-height:1.85;color:rgba(255,255,255,0.72);margin:0;">
+          Ingénieur en Management des Systèmes Électriques Intelligents, option Systèmes de Management de l'Énergie, diplômé de l'ENSAM Casablanca. Passionné par les défis technologiques et la transition énergétique, je souhaite évoluer dans un environnement innovant où je pourrai valoriser mes compétences techniques et managériales.
+        </p>
+      </div>
+      <!-- Diplômes -->
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="card" style="padding:20px 24px;">
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="width:8px;height:8px;border-radius:50%;background:#22c55e;flex-shrink:0;margin-top:5px;box-shadow:0 0 8px rgba(34,197,94,0.5);"></div>
+            <div>
+              <p style="margin:0;font-weight:800;font-size:15px;color:white;">ENSAM Casablanca</p>
+              <p style="margin:5px 0 0;font-size:13px;color:rgba(255,255,255,0.5);">Cycle d'ingénieur – Management des Systèmes Électriques Intelligents</p>
+              <p style="margin:8px 0 0;font-size:12px;color:#22c55e;font-weight:700;">2023 – 2026</p>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="padding:20px 24px;">
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="width:8px;height:8px;border-radius:50%;background:#22c55e;flex-shrink:0;margin-top:5px;box-shadow:0 0 8px rgba(34,197,94,0.5);"></div>
+            <div>
+              <p style="margin:0;font-weight:800;font-size:15px;color:white;">Centre Settat</p>
+              <p style="margin:5px 0 0;font-size:13px;color:rgba(255,255,255,0.5);">Classes préparatoires TSI</p>
+              <p style="margin:8px 0 0;font-size:12px;color:#22c55e;font-weight:700;">2021 – 2023</p>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="padding:20px 24px;">
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="width:8px;height:8px;border-radius:50%;background:#22c55e;flex-shrink:0;margin-top:5px;box-shadow:0 0 8px rgba(34,197,94,0.5);"></div>
+            <div>
+              <p style="margin:0;font-weight:800;font-size:15px;color:white;">Lycée Moulay Ismail, Meknès</p>
+              <p style="margin:5px 0 0;font-size:13px;color:rgba(255,255,255,0.5);">Baccalauréat Sciences et Techniques Électriques</p>
+              <p style="margin:8px 0 0;font-size:12px;color:#22c55e;font-weight:700;">2019 – 2021</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     EXPÉRIENCE
+═══════════════════════════════════════ -->
+<section id="experience" style="padding:100px 28px;background:#050505;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="fade-up section-header" style="margin-bottom:52px;">
+      <div style="display:flex;align-items:center;gap:16px;">
+        <div style="width:36px;height:3px;background:#22c55e;border-radius:2px;"></div>
+        <h2 style="font-size:30px;font-weight:800;color:white;margin:0;letter-spacing:-0.5px;">Expériences Professionnelles</h2>
+        <div style="flex:1;height:1px;background:linear-gradient(to right,rgba(34,197,94,0.35),transparent);"></div>
+      </div>
+    </div>
+    <div style="position:relative;">
+      <div class="timeline-line desk-only"></div>
+      <div style="display:flex;flex-direction:column;gap:22px;padding-left:24px;" class="timeline-pad">
+
+        <!-- VINCI -->
+        <div class="fade-up card" style="padding:30px;position:relative;">
+          <div class="timeline-dot desk-only"></div>
+          <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;margin-bottom:14px;">
+            <div>
+              <p style="margin:0;font-size:18px;font-weight:800;color:white;">VINCI Energies – Green Ammonia Pilot</p>
+              <p style="margin:6px 0 0;font-size:13px;color:rgba(255,255,255,0.45);font-style:italic;">Stage PFE – Instrumentation & contrôle-commande, station ammoniac vert</p>
+            </div>
+            <div style="text-align:right;flex-shrink:0;">
+              <span style="background:rgba(34,197,94,0.12);color:#22c55e;border:1px solid rgba(34,197,94,0.25);border-radius:100px;padding:5px 14px;font-size:12px;font-weight:700;">Fév – Août 2026</span>
+              <p style="margin:8px 0 0;font-size:12px;color:rgba(255,255,255,0.3);">📍 El Jorf Lasfar</p>
+            </div>
+          </div>
+          <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:7px;">
+            <li style="display:flex;gap:10px;font-size:13px;color:rgba(255,255,255,0.62);line-height:1.6;"><span style="color:#22c55e;font-weight:800;flex-shrink:0;">›</span>Appui aux études CFO/CFA.</li>
+            <li style="display:flex;gap:10px;font-size:13px;color:rgba(255,255,255,0.62);line-height:1.6;"><span style="color:#22c55e;font-weight:800;flex-shrink:0;">›</span>Contribution à la conception de l'architecture contrôle-commande de la station.</li>
+            <li style="display:flex;gap:10px;font-size:13px;color:rgba(255,255,255,0.62);line-height:1.6;"><span style="color:#22c55e;font-weight:800;flex-shrink:0;">›</span>Participation aux études d'instrumentation et de supervision procédé.</li>
+            <li style="display:flex;gap:10px;font-size:13px;color:rgba(255,255,255,0.62);line-height:1.6;"><span style="color:#22c55e;font-weight:800;flex-shrink:0;">›</span>Analyse du fonctionnement d'un électrolyseur alcalin sous énergie renouvelable intermittente.</li>
+          </ul>
+        </div>
+
+        <!-- OCP -->
+        <div class="fade-up card" style="padding:30px;position:relative;">
+          <div class="timeline-dot desk-only"></div>
+          <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;margin-bottom:14px;">
+            <div>
+              <p style="margin:0;font-size:18px;font-weight:800;color:white;">OCP Group, Unité CAP</p>
+              <p style="margin:6px 0 0;font-size:13px;color:rgba(255,255,255,0.45);font-style:italic;">Stage PFA – Automatisation de la station de floculation</p>
+            </div>
+            <div style="text-align:right;flex-shrink:0;">
+              <span style="background:rgba(34,197,94,0.12);color:#22c55e;border:1px solid rgba(34,197,94,0.25);border-radius:100px;padding:5px 14px;font-size:12px;font-weight:700;">Juil – Sep 2025</span>
+              <p style="margin:8px 0 0;font-size:12px;color:rgba(255,255,255,0.3);">📍 El Jorf Lasfar</p>
+            </div>
+          </div>
+          <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:7px;">
+            <li style="display:flex;gap:10px;font-size:13px;color:rgba(255,255,255,0.62);line-height:1.6;"><span style="color:#22c55e;font-weight:800;flex-shrink:0;">›</span>Étude du circuit de puissance et de commande.</li>
+            <li style="display:flex;gap:10px;font-size:13px;color:rgba(255,255,255,0.62);line-height:1.6;"><span style="color:#22c55e;font-weight:800;flex-shrink:0;">›</span>Recensement des E/S et schémas électriques.</li>
+            <li style="display:flex;gap:10px;font-size:13px;color:rgba(255,255,255,0.62);line-height:1.6;"><span style="color:#22c55e;font-weight:800;flex-shrink:0;">›</span>Programmation de l'automate industriel et mise en place d'un plan de maintenance préventive.</li>
+          </ul>
+        </div>
+
+        <!-- Green Energy -->
+        <div class="fade-up card" style="padding:30px;position:relative;">
+          <div class="timeline-dot desk-only"></div>
+          <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;margin-bottom:14px;">
+            <div>
+              <p style="margin:0;font-size:18px;font-weight:800;color:white;">Green Energy Park</p>
+              <p style="margin:6px 0 0;font-size:13px;color:rgba(255,255,255,0.45);font-style:italic;">Stage d'initiation – Sizing of a microgrid electrical control panel</p>
+            </div>
+            <div style="text-align:right;flex-shrink:0;">
+              <span style="background:rgba(34,197,94,0.12);color:#22c55e;border:1px solid rgba(34,197,94,0.25);border-radius:100px;padding:5px 14px;font-size:12px;font-weight:700;">Juil – Sep 2024</span>
+              <p style="margin:8px 0 0;font-size:12px;color:rgba(255,255,255,0.3);">📍 Benguerir</p>
+            </div>
+          </div>
+          <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:7px;">
+            <li style="display:flex;gap:10px;font-size:13px;color:rgba(255,255,255,0.62);line-height:1.6;"><span style="color:#22c55e;font-weight:800;flex-shrink:0;">›</span>Dimensionnement d'une armoire électrique sous Caneco BT et AutoCAD.</li>
+            <li style="display:flex;gap:10px;font-size:13px;color:rgba(255,255,255,0.62);line-height:1.6;"><span style="color:#22c55e;font-weight:800;flex-shrink:0;">›</span>Communication entre équipements via Modbus RTU.</li>
+            <li style="display:flex;gap:10px;font-size:13px;color:rgba(255,255,255,0.62);line-height:1.6;"><span style="color:#22c55e;font-weight:800;flex-shrink:0;">›</span>Sélection des câbles et dispositifs de protection, optimisation des coûts.</li>
+            <li style="display:flex;gap:10px;font-size:13px;color:rgba(255,255,255,0.62);line-height:1.6;"><span style="color:#22c55e;font-weight:800;flex-shrink:0;">›</span>Simulation RCP/HIL pour contrôle et tests de microgrid.</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     PROJETS
+═══════════════════════════════════════ -->
+<section id="projets" style="padding:100px 28px;background:#0a0a0a;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="fade-up section-header" style="margin-bottom:52px;">
+      <div style="display:flex;align-items:center;gap:16px;">
+        <div style="width:36px;height:3px;background:#22c55e;border-radius:2px;"></div>
+        <h2 style="font-size:30px;font-weight:800;color:white;margin:0;letter-spacing:-0.5px;">Projets Académiques</h2>
+        <div style="flex:1;height:1px;background:linear-gradient(to right,rgba(34,197,94,0.35),transparent);"></div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;">
+      <div class="fade-up card" style="padding:26px;display:flex;flex-direction:column;">
+        <div style="font-size:32px;margin-bottom:14px;">⚡</div>
+        <h3 style="margin:0 0 12px;font-size:16px;font-weight:800;color:white;line-height:1.4;">Audit énergétique – CIMAT Ben Ahmed</h3>
+        <ul style="margin:0 0 auto;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;">
+          <li style="display:flex;gap:8px;font-size:12px;color:rgba(255,255,255,0.5);line-height:1.5;"><span style="color:#22c55e;font-weight:800;flex-shrink:0;">›</span>Analyse CES des départs P11–P17.</li>
+          <li style="display:flex;gap:8px;font-size:12px;color:rgba(255,255,255,0.5);line-height:1.5;"><span style="color:#22c55e;font-weight:800;flex-shrink:0;">›</span>Bilan énergétique compresseurs Kaeser DSD202 sur 72h.</li>
+          <li style="display:flex;gap:8px;font-size:12px;color:rgba(255,255,255,0.5);line-height:1.5;"><span style="color:#22c55e;font-weight:800;flex-shrink:0;">›</span>Optimisation éclairage selon EN 12-464-1.</li>
+          <li style="display:flex;gap:8px;font-size:12px;color:rgba(255,255,255,0.5);line-height:1.5;"><span style="color:#22c55e;font-weight:800;flex-shrink:0;">›</span>Mise en place SMÉ selon ISO 50001.</li>
+        </ul>
+        <div style="margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.06);">
+          <span style="font-size:11px;color:rgba(34,197,94,0.75);font-family:monospace;font-weight:600;">ISO 50001 · ONEE · EN 12-464-1</span>
+        </div>
+      </div>
+      <div class="fade-up card" style="padding:26px;display:flex;flex-direction:column;">
+        <div style="font-size:32px;margin-bottom:14px;">☀️</div>
+        <h3 style="margin:0 0 12px;font-size:16px;font-weight:800;color:white;line-height:1.4;">Simulation MPPT – Systèmes Photovoltaïques</h3>
+        <ul style="margin:0 0 auto;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;">
+          <li style="display:flex;gap:8px;font-size:12px;color:rgba(255,255,255,0.5);line-height:1.5;"><span style="color:#22c55e;font-weight:800;flex-shrink:0;">›</span>Modélisation système PV avec convertisseur DC-DC Boost.</li>
+          <li style="display:flex;gap:8px;font-size:12px;color:rgba(255,255,255,0.5);line-height:1.5;"><span style="color:#22c55e;font-weight:800;flex-shrink:0;">›</span>Comparaison algorithmes P&amp;O et Incremental Conductance.</li>
+        </ul>
+        <div style="margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.06);">
+          <span style="font-size:11px;color:rgba(34,197,94,0.75);font-family:monospace;font-weight:600;">MATLAB/Simulink</span>
+        </div>
+      </div>
+      <div class="fade-up card" style="padding:26px;display:flex;flex-direction:column;">
+        <div style="font-size:32px;margin-bottom:14px;">🔌</div>
+        <h3 style="margin:0 0 12px;font-size:16px;font-weight:800;color:white;line-height:1.4;">UART IP Core – Détection auto baud rate</h3>
+        <ul style="margin:0 0 auto;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;">
+          <li style="display:flex;gap:8px;font-size:12px;color:rgba(255,255,255,0.5);line-height:1.5;"><span style="color:#22c55e;font-weight:800;flex-shrink:0;">›</span>Conception FSM en VHDL, simulation ModelSim/GTKWave.</li>
+          <li style="display:flex;gap:8px;font-size:12px;color:rgba(255,255,255,0.5);line-height:1.5;"><span style="color:#22c55e;font-weight:800;flex-shrink:0;">›</span>Implémentation FPGA iCE40HX1K via toolchain open-source.</li>
+        </ul>
+        <div style="margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.06);">
+          <span style="font-size:11px;color:rgba(34,197,94,0.75);font-family:monospace;font-weight:600;">VHDL · FPGA</span>
+        </div>
+      </div>
+      <div class="fade-up card" style="padding:26px;display:flex;flex-direction:column;">
+        <div style="font-size:32px;margin-bottom:14px;">🔋</div>
+        <h3 style="margin:0 0 12px;font-size:16px;font-weight:800;color:white;line-height:1.4;">Bus électrique – Supercondensateurs</h3>
+        <ul style="margin:0 0 auto;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;">
+          <li style="display:flex;gap:8px;font-size:12px;color:rgba(255,255,255,0.5);line-height:1.5;"><span style="color:#22c55e;font-weight:800;flex-shrink:0;">›</span>Modélisation énergétique et dimensionnement stockage.</li>
+          <li style="display:flex;gap:8px;font-size:12px;color:rgba(255,255,255,0.5);line-height:1.5;"><span style="color:#22c55e;font-weight:800;flex-shrink:0;">›</span>Comparaison batteries LMP vs supercondensateurs.</li>
+        </ul>
+        <div style="margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.06);">
+          <span style="font-size:11px;color:rgba(34,197,94,0.75);font-family:monospace;font-weight:600;">MATLAB/Simulink</span>
+        </div>
+      </div>
+      <div class="fade-up card" style="padding:26px;display:flex;flex-direction:column;">
+        <div style="font-size:32px;margin-bottom:14px;">🤖</div>
+        <h3 style="margin:0 0 12px;font-size:16px;font-weight:800;color:white;line-height:1.4;">Robot Cleaner autonome</h3>
+        <ul style="margin:0 0 auto;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;">
+          <li style="display:flex;gap:8px;font-size:12px;color:rgba(255,255,255,0.5);line-height:1.5;"><span style="color:#22c55e;font-weight:800;flex-shrink:0;">›</span>Conception, programmation et développement d'un robot domestique autonome.</li>
+        </ul>
+        <div style="margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.06);">
+          <span style="font-size:11px;color:rgba(34,197,94,0.75);font-family:monospace;font-weight:600;">Embedded Systems</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     COMPÉTENCES
+═══════════════════════════════════════ -->
+<section id="competences" style="padding:100px 28px;background:#050505;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="fade-up section-header" style="margin-bottom:52px;">
+      <div style="display:flex;align-items:center;gap:16px;">
+        <div style="width:36px;height:3px;background:#22c55e;border-radius:2px;"></div>
+        <h2 style="font-size:30px;font-weight:800;color:white;margin:0;letter-spacing:-0.5px;">Compétences & Langues</h2>
+        <div style="flex:1;height:1px;background:linear-gradient(to right,rgba(34,197,94,0.35),transparent);"></div>
+      </div>
+    </div>
+    <div class="grid-3 fade-up" style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:20px;">
+      <div class="card" style="padding:26px;">
+        <p style="font-size:12px;font-weight:700;color:#22c55e;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:18px;">Logiciels & Simulation</p>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+          <span class="skill-tag">Matlab/Simulink</span><span class="skill-tag">AutoCAD</span><span class="skill-tag">Caneco BT</span><span class="skill-tag">EPLAN</span><span class="skill-tag">PSIM</span><span class="skill-tag">LTspice</span><span class="skill-tag">Proteus</span><span class="skill-tag">TIA Portal</span><span class="skill-tag">RSLogix</span><span class="skill-tag">ModelSim</span><span class="skill-tag">Quartus</span><span class="skill-tag">PVsyst</span>
+        </div>
+      </div>
+      <div class="card" style="padding:26px;">
+        <p style="font-size:12px;font-weight:700;color:#22c55e;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:18px;">Développement & Langages</p>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+          <span class="skill-tag">VHDL</span><span class="skill-tag">Verilog</span><span class="skill-tag">Python</span><span class="skill-tag">C</span><span class="skill-tag">C++</span><span class="skill-tag">SQL</span><span class="skill-tag">HTML/CSS</span><span class="skill-tag">R</span><span class="skill-tag">MATLAB</span>
+        </div>
+      </div>
+      <div class="card" style="padding:26px;">
+        <p style="font-size:12px;font-weight:700;color:#22c55e;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:18px;">Maintenance & Gestion</p>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+          <span class="skill-tag">5S</span><span class="skill-tag">PDCA</span><span class="skill-tag">DMAIC</span><span class="skill-tag">Ishikawa</span><span class="skill-tag">GMAO</span><span class="skill-tag">AMDEC</span><span class="skill-tag">KPI</span><span class="skill-tag">PMP</span><span class="skill-tag">Gestion des PDR</span>
+        </div>
+      </div>
+    </div>
+    <!-- Langues -->
+    <div class="fade-up card" style="padding:30px;margin-bottom:20px;" id="lang-section">
+      <p style="font-size:12px;font-weight:700;color:#22c55e;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:24px;">Langues</p>
+      <div class="grid-lang" style="display:grid;grid-template-columns:repeat(4,1fr);gap:24px;">
+        <div><div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span style="font-size:14px;font-weight:700;color:white;">Arabe</span><span style="font-size:12px;font-weight:700;color:#22c55e;">Natif</span></div><div style="height:6px;background:rgba(255,255,255,0.08);border-radius:100px;overflow:hidden;"><div class="lang-bar-fill" data-pct="100"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span style="font-size:14px;font-weight:700;color:white;">Français</span><span style="font-size:12px;font-weight:700;color:#22c55e;">C1</span></div><div style="height:6px;background:rgba(255,255,255,0.08);border-radius:100px;overflow:hidden;"><div class="lang-bar-fill" data-pct="85"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span style="font-size:14px;font-weight:700;color:white;">Anglais</span><span style="font-size:12px;font-weight:700;color:#22c55e;">B2</span></div><div style="height:6px;background:rgba(255,255,255,0.08);border-radius:100px;overflow:hidden;"><div class="lang-bar-fill" data-pct="70"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span style="font-size:14px;font-weight:700;color:white;">Espagnol</span><span style="font-size:12px;font-weight:700;color:#22c55e;">A1</span></div><div style="height:6px;background:rgba(255,255,255,0.08);border-radius:100px;overflow:hidden;"><div class="lang-bar-fill" data-pct="20"></div></div></div>
+      </div>
+    </div>
+    <!-- Certif + Activités -->
+    <div class="grid-2 fade-up" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+      <div class="card" style="padding:26px;">
+        <p style="font-size:12px;font-weight:700;color:#22c55e;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:18px;">🏅 Certifications</p>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;gap:10px;font-size:13px;color:rgba(255,255,255,0.65);"><span style="color:#22c55e;font-weight:800;">✓</span>CCNA : Introduction to Networks – Cisco Networking Academy</div>
+          <div style="display:flex;gap:10px;font-size:13px;color:rgba(255,255,255,0.65);"><span style="color:#22c55e;font-weight:800;">✓</span>ISO 50001:2018 Energy Management System Awareness</div>
+        </div>
+      </div>
+      <div class="card" style="padding:26px;">
+        <p style="font-size:12px;font-weight:700;color:#22c55e;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:18px;">🎯 Activités Parascolaires</p>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;gap:10px;font-size:13px;color:rgba(255,255,255,0.65);"><span style="color:#22c55e;font-weight:800;">›</span>Responsable des relations externes – ADEI ENSAM</div>
+          <div style="display:flex;gap:10px;font-size:13px;color:rgba(255,255,255,0.65);"><span style="color:#22c55e;font-weight:800;">›</span>Membre actif du Club Jeune Leader Marocain</div>
+          <div style="display:flex;gap:10px;font-size:13px;color:rgba(255,255,255,0.65);"><span style="color:#22c55e;font-weight:800;">›</span>Membre actif du Club Mécatronique</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     CONTACT
+═══════════════════════════════════════ -->
+<section id="contact" style="padding:100px 28px;background:#0a0a0a;">
+  <div style="max-width:560px;margin:0 auto;text-align:center;">
+    <div class="fade-up">
+      <h2 style="font-size:36px;font-weight:800;color:white;letter-spacing:-1px;margin-bottom:12px;">Travaillons ensemble</h2>
+      <p style="font-size:15px;color:rgba(255,255,255,0.45);margin-bottom:44px;">Disponible pour toute opportunité, stage ou collaboration.</p>
+    </div>
+    <div class="fade-up" style="display:flex;flex-direction:column;gap:14px;">
+      <a href="mailto:medelfahim2003@gmail.com" class="contact-card">
+        <div style="width:44px;height:44px;border-radius:12px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;color:#22c55e;flex-shrink:0;">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        </div>
+        <span style="font-size:14px;font-weight:600;flex:1;text-align:left;">medelfahim2003@gmail.com</span>
+        <svg width="14" height="14" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </a>
+      <a href="tel:+212622624977" class="contact-card">
+        <div style="width:44px;height:44px;border-radius:12px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;color:#22c55e;flex-shrink:0;">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.16 6.16l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        </div>
+        <span style="font-size:14px;font-weight:600;flex:1;text-align:left;">+212 6 22 62 49 77</span>
+        <svg width="14" height="14" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </a>
+      <a href="https://www.linkedin.com/in/mohamed-el-fahim-044850249/" target="_blank" rel="noreferrer" class="contact-card">
+        <div style="width:44px;height:44px;border-radius:12px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;color:#22c55e;flex-shrink:0;">
+          <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        </div>
+        <span style="font-size:14px;font-weight:600;flex:1;text-align:left;">linkedin.com/in/mohamed-el-fahim</span>
+        <svg width="14" height="14" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer style="padding:28px;text-align:center;border-top:1px solid rgba(255,255,255,0.05);">
+  <p style="font-size:12px;color:rgba(255,255,255,0.2);">© 2026 Mohamed EL FAHIM — ENSAM Casablanca</p>
+</footer>
+
+<script>
+// ── 1. NAVBAR SCROLL ──────────────────────────
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 50) {
+    navbar.style.background = 'rgba(5,5,5,0.92)';
+    navbar.style.backdropFilter = 'blur(14px)';
+    navbar.style.padding = '14px 0';
+    navbar.style.borderBottom = '1px solid rgba(34,197,94,0.12)';
+  } else {
+    navbar.style.background = 'transparent';
+    navbar.style.backdropFilter = 'none';
+    navbar.style.padding = '24px 0';
+    navbar.style.borderBottom = 'none';
+  }
+});
+
+// ── 2. MENU MOBILE ────────────────────────────
+document.getElementById('mob-menu-btn').addEventListener('click', () => {
+  const m = document.getElementById('mob-menu');
+  m.style.display = m.style.display === 'flex' ? 'none' : 'flex';
+});
+document.querySelectorAll('#mob-menu a').forEach(a => {
+  a.addEventListener('click', () => { document.getElementById('mob-menu').style.display = 'none'; });
+});
+
+// ── 3. EFFET LUMIÈRE SOURIS ───────────────────
+const glow     = document.getElementById('mouse-glow');
+const photoW   = document.getElementById('photo-wrapper');
+const photoH   = document.getElementById('photo-halo');
+let   mouseX = 0, mouseY = 0;
+
+document.addEventListener('mousemove', (e) => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+
+  // Lumière globale qui suit la souris
+  glow.style.left = mouseX + 'px';
+  glow.style.top  = mouseY + 'px';
+  glow.style.opacity = '1';
+
+  // Distance entre la souris et le centre de la photo
+  const rect = photoW.getBoundingClientRect();
+  const cx = rect.left + rect.width  / 2;
+  const cy = rect.top  + rect.height / 2;
+  const dist = Math.hypot(mouseX - cx, mouseY - cy);
+
+  // Plus la souris est proche (< 250px), plus le halo brille
+  const maxDist = 250;
+  if (dist < maxDist) {
+    const intensity = 1 - dist / maxDist;       // 0 → 1
+    photoH.style.opacity  = (intensity * 0.85).toFixed(2);
+    photoH.style.transform = `scale(${1 + intensity * 0.12})`;
+
+    // Lumière verte de fond qui explose depuis la photo
+    glow.style.background = `radial-gradient(circle,
+      rgba(34,197,94,${(intensity * 0.18).toFixed(2)}) 0%,
+      rgba(34,197,94,${(intensity * 0.07).toFixed(2)}) 35%,
+      transparent 70%)`;
+    glow.style.width  = (500 + intensity * 300) + 'px';
+    glow.style.height = (500 + intensity * 300) + 'px';
+    glow.style.left   = cx + 'px';
+    glow.style.top    = cy + window.scrollY + 'px';
+    glow.style.position = 'absolute';
+  } else {
+    photoH.style.opacity  = '0';
+    photoH.style.transform = 'scale(1)';
+    glow.style.position = 'fixed';
+    glow.style.left = mouseX + 'px';
+    glow.style.top  = mouseY + 'px';
+    glow.style.width  = '600px';
+    glow.style.height = '600px';
+    glow.style.background = 'radial-gradient(circle,rgba(34,197,94,0.06) 0%,rgba(34,197,94,0.02) 40%,transparent 70%)';
+  }
+});
+
+document.addEventListener('mouseleave', () => { glow.style.opacity = '0'; });
+
+// ── 4. FADE-UP AU SCROLL ─────────────────────
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+// ── 5. BARRES DE LANGUES ─────────────────────
+const langObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      document.querySelectorAll('.lang-bar-fill').forEach(bar => {
+        bar.style.width = bar.dataset.pct + '%';
+      });
+      langObserver.disconnect();
+    }
+  });
+}, { threshold: 0.3 });
+
+const langSec = document.getElementById('lang-section');
+if (langSec) langObserver.observe(langSec);
+</script>
+</body>
 </html>
